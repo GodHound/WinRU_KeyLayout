@@ -6,23 +6,26 @@ if "%answer%"=="" goto:no
 if "%answer:~0,1%"=="y" goto:yes
 :no
 echo Cancelled.
-goto:eof
+goto:wait
 :yes
 del %windir%\system32\RUforIT.dll >nul 2>&1
 if exist %windir%\system32\RUforIT.dll goto:cannotdel
+del %windir%\SysWOW64\RUforIT.dll >nul 2>&1
+if exist %windir%\SysWOW64\RUforIT.dll goto:cannotdel
 set key="HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layouts\07430420"
 reg delete %key% /f >nul 2>&1
 if errorlevel 1 goto:cannotreg
-if errorlevel 1 goto:cannotreg
 echo The job is done.
-goto:eof
+goto:wait
 :notexist
 echo There is no RUforIT.dll installed.
-goto:eof
+goto:wait
 :cannotdel
 echo Error: unable to delete file from system directory.
 echo Make sure you are running this command with administrative privilegies.
-goto:eof
+goto:wait
 :cannotreg
 echo Error: unable to unregister the layout.
-goto:eof
+goto:wait
+:wait
+TIMEOUT 5
